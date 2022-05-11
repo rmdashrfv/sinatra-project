@@ -18,7 +18,7 @@ class ApplicationController < Sinatra::Base
     base_url = 'http://www.ffmages.com/final-fantasy-tactics/job-classes/'
     unit_classes = %w[Archer Bard Calculator Chemist Dancer Geomancer Knight Lancer Mediator Mime Monk Oracle Priest Samurai Squire Summoner Thief Time\ Mage Ninja Wizard]
     unit_classes.each do |unit|
-      puts %(#{base_url}#{unit.downcase.tr(' ', '-')})
+      full_url = %(#{base_url}#{unit.downcase.tr(' ', '-')})
     end
   end
 
