@@ -14,6 +14,14 @@ class ApplicationController < Sinatra::Base
     {m: 'test'}.to_json
   end
 
+  get "/units" do
+    base_url = 'http://www.ffmages.com/final-fantasy-tactics/job-classes/'
+    unit_classes = %w[Archer Bard Calculator Chemist Dancer Geomancer Knight Lancer Mediator Mime Monk Oracle Priest Samurai Squire Summoner Thief Time\ Mage Ninja Wizard]
+    unit_classes.each do |unit|
+      puts %(#{base_url}#{unit.downcase.tr(' ', '-')})
+    end
+  end
+
   get "/weapons" do
     url = 'http://www.ffmages.com/final-fantasy-tactics/weapons/'
     weapons_list = []
