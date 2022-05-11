@@ -15,16 +15,34 @@ class ApplicationController < Sinatra::Base
   end
 
   get "/weapons" do
-    # this scrapes FFT Wiki for the weapons list
     url = 'https://finalfantasy.fandom.com/wiki/Final_Fantasy_Tactics_weapons'
     html = Nokogiri::HTML(URI.open(url))
     weapons_list = [] 
-    html.search('table').each do |table|
+    # full-width FFT article-table
+    html.css('table[class="full-width FFT article-table"]').each do |table|
+      # name = nil
+      # desc = nil
+      # atk  = nil
+      weapon = {}
+      table.search('tr').search('td').each_with_index { |el, i|
+        p el.content
+        case i
+        when 0
+          weapon[:atk] = el.content
+        when 1
+          weapon[:mag] = el.content
+        when 2
+          weapon[:def] = el.content
+        else
+          weapon[:desc] = el.content
+        end
+      }
       table.search('tr').search('th > a > span').each do |element|
-        weapons_list << element.children[0].content
+        # weapon[:name] = element.content[0].content
+        # weapons_list << element.children[0].content
       end
+      weapons_list << weapon
     end
-    # p html.search('table')[0]
     {weapson: weapons_list}.to_json
   end
 
