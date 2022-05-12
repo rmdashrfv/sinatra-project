@@ -19,6 +19,7 @@ class ApplicationController < Sinatra::Base
     unit_classes = %w[Archer Bard Calculator Chemist Dancer Geomancer Knight Lancer Mediator Mime Monk Oracle Priest Samurai Squire Summoner Thief Time\ Mage Ninja Wizard]
     unit_classes.each do |unit|
       full_url = %(#{base_url}#{unit.downcase.tr(' ', '-')})
+    p full_url
     end
   end
 
@@ -26,18 +27,19 @@ class ApplicationController < Sinatra::Base
     url = 'http://www.ffmages.com/final-fantasy-tactics/weapons/'
     weapons_list = []
     html = Nokogiri::HTML5(URI.open(url))
-    weapon_categories = []
+    weapon_categories = [] # Create a container for the categories, because they're not in tables
     html.search('h2').each do |h2|
-      weapon_categories << h2.content
+      weapon_categories << h2.content # store the h2 textContent as str in the container
     end
+
+    # loop over every table element
     html.search('table').each_with_index { |table, table_index|
       category = weapon_categories[table_index]
       table.css('tbody > tr').each_with_index { |tr, tr_index|
-        next if tr_index == 0
+        next if tr_index == 0 # because this is the blank column
         weapon = {img: nil, name: nil, atk: nil, evade: nil, location: nil, cost: nil, attributes: nil, category: category}
         tr.css('td').each_with_index { |td, td_index|
           next if td_index == 0
-          p td.content
           weapon[weapon.keys[td_index]] = td.content
         }
         weapons_list << weapon
